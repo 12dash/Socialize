@@ -7,8 +7,8 @@ function Create() {
     description: "",
   });
 
-  const [timeArray, setTimeArray] = useState([]);
   const [time, setTime] = useState("");
+  const [timeArray, setTimeArray] = useState([]);
 
   const [location, setLocation] = useState("");
   const [locationArray, setLocationArray] = useState([]);
@@ -16,8 +16,13 @@ function Create() {
   const TimeComponent = () => {
     if (timeArray !== null) {
       return timeArray.map((item, index) => (
-        <div className="col-1" key = {item}>
-          <button className="btn btn-outline-secondary" onClick={() => handleRemoveTime(index)}>{item} </button>
+        <div className="col-1" key={item}>
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => handleRemoveTime(index)}
+          >
+            {item}{" "}
+          </button>
         </div>
       ));
     } else return <></>;
@@ -26,8 +31,13 @@ function Create() {
   const LocationComponent = () => {
     if (locationArray !== null) {
       return locationArray.map((item, index) => (
-        <div className="col-2" key = {item}>
-          <button className="btn btn-outline-secondary" onClick={() => handleRemoveLocation(index)}>{item} </button>
+        <div className="col-2" key={item}>
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => handleRemoveLocation(index)}
+          >
+            {item}{" "}
+          </button>
         </div>
       ));
     } else return <></>;
@@ -47,16 +57,6 @@ function Create() {
     setLocation(event.target.value);
   };
 
-  const handleLocationArray = (event) => {
-    event.preventDefault();
-
-    if (location.trim() !== "") {
-      var val = location.trim()
-      setLocationArray([...timeArray, val]);
-      setLocation("");
-    }
-  };
-
   const handleRemoveTime = (index) => {
     const updatedTimeArray = [...timeArray];
     updatedTimeArray.splice(index, 1);
@@ -73,18 +73,39 @@ function Create() {
     event.preventDefault();
 
     if (time.trim() !== "") {
-      var val = time.trim().replace(' ', '')
+      var val = time.trim().replace(" ", "");
       setTimeArray([...timeArray, val]);
       setTime("");
     }
   };
 
+  const handleLocationArray = (event) => {
+    event.preventDefault();
+
+    if (location.trim() !== "") {
+      var val = location.trim();
+      setLocationArray([...locationArray, val]);
+      setLocation("");
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (formData.category !== "") console.log("Form submitted:", formData);
-    else {
-      alert("Please select a category");
-      console.log("Empty category");
+    var category_validation = formData.category !== "";
+    var timeArray_validation = timeArray.length > 0;
+    var locationArray_validation = locationArray.length > 0;
+
+    if (
+      category_validation &&
+      timeArray_validation &&
+      locationArray_validation
+    ) {
+      console.log("Submit");
+    } else {
+      if (category_validation === false) alert("Please select a category")
+      else if (timeArray_validation === false) alert("Please add at least 1 time")
+      else if (locationArray_validation === false) alert("Please add at least 1 location")
+      console.log("Error with form");
     }
   };
 
@@ -161,14 +182,10 @@ function Create() {
               value={time}
               onChange={handleTimeChange}
               placeholder="e.g., 6:30 pm"
-              required
             />
           </div>
           <div className="col-2">
-            <button
-              className="btn btn-secondary"
-              onClick={handleTimeArray}
-            >
+            <button className="btn btn-secondary" onClick={handleTimeArray}>
               Add
             </button>
           </div>
@@ -189,20 +206,17 @@ function Create() {
               value={location}
               onChange={handleLocationChange}
               placeholder="e.g., Uris Hall"
-              required
             />
           </div>
           <div className="col-2">
-            <button
-              className="btn btn-secondary"
-              onClick={handleLocationArray}
-            >
+            <button className="btn btn-secondary" onClick={handleLocationArray}>
               Add
             </button>
           </div>
         </div>
         <br />
         <div className="row">{LocationComponent()}</div>
+        <br />
         <button type="submit" className="btn btn-primary">
           Create
         </button>
