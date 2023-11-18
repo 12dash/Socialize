@@ -31,7 +31,7 @@ export const Cards = (props ) => {
           </div>
         </div>
         <br />
-        <a href={"/specific?id="+props.id+'&type='+props.type} className="btn btn-outline-dark">
+        <a href={"/specific?id="+props.cardId+'&type='+props.type} className="btn btn-outline-dark">
           {props.title}
         </a>
       </div>
@@ -58,7 +58,7 @@ export const PollingCards = (props) => {
               <p>{props.type}</p>
           </div>
         </div>
-        <a href={"/specificPolling?id="+props.id+'&type='+props.type} className="btn btn-outline-dark">
+        <a href={"/specificPolling?id="+props.pollingId+'&type='+props.type} className="btn btn-outline-dark">
           {props.title}
         </a>
       </div>

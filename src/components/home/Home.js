@@ -32,7 +32,7 @@ function Home(props) {
       return upcoming.map((item) => (
         <Cards
           key={item.id}
-          id={item.id}
+          cardId={item.id}
           title={item.title}
           img_url={item.img_url}
           location={item.location}

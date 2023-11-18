@@ -21,11 +21,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/event",
-    element: <Event />,
+    element: <Event url = {URL}/>,
   },
   {
     path: "/studygroup",
-    element: <StudyGroup />,
+    element: <StudyGroup url = {URL}/>,
   },
   {
     path: "/create",
@@ -33,11 +33,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/meetup",
-    element: <MeetUp />,
+    element: <MeetUp url = {URL}/>,
   },
   {
     path: "/user",
-    element: <User />,
+    element: <User url = {URL}/>,
   },
   {
     path: "/specific",
