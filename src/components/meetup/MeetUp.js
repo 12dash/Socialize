@@ -65,13 +65,14 @@ function MeetUp(props) {
       return upcoming.map((item) => (
         <Cards
           key = {item.id}
-          cardsId={item.id}
+          cardId={item.id}
           title={item.title}
           img_url={item.img_url}
           location={item.location}
           time={item.time}
           numPeople={item.numPeople}
           type={item.type}
+          url = {props.url}
         />
       ));
     } else return <></>;

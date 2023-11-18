@@ -12,7 +12,7 @@ import MeetUp from "./components/meetup/MeetUp";
 import User from "./components/user/User";
 import Specific from "./components/specific/Specific";
 
-const URL = "https://4xk070et44.execute-api.us-east-1.amazonaws.com/dev"
+const URL = "https://i9zqqcxfy5.execute-api.us-east-1.amazonaws.com/dev"
 
 const router = createBrowserRouter([
   {
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/specific",
-    element: <Specific />,
+    element: <Specific url = {URL}/>,
   },
 ]);
 
