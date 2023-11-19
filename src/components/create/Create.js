@@ -5,6 +5,7 @@ function Create() {
     category: "",
     name: "",
     description: "",
+    poll: false,
   });
 
   const [time, setTime] = useState("");
@@ -62,8 +63,9 @@ function Create() {
   };
 
   const handleChange = (event) => {
-    var { name, value } = event.target;
+    var { name, value, type, checked } = event.target;
     name = event.target.id;
+    value = type === 'checkbox' ? checked : value;
     setFormData({ ...formData, [name]: value });
   };
 
@@ -142,7 +144,20 @@ function Create() {
       locationArray_validation &&
       dateArray_validation
     ) {
-      console.log("Submit", dateArray);
+      if (formData.poll === false){
+        if (timeArray.length > 1){
+          alert("It seems you are trying to add more than 1 time but its not a poll. Either mark it as poll or choose one time");
+        }
+        if (locationArray.length > 1){
+          alert("It seems you are trying to add more than 1 location but its not a poll. Either mark it as poll or choose one location");
+        }
+        if (dateArray.length > 1){
+          alert("It seems you are trying to add more than 1 date but its not a poll. Either mark it as poll or choose one date");
+        }
+        else {
+          console.log("Submit", dateArray, formData);
+        }
+      }
     } else {
       if (category_validation === false) alert("Please select a category");
       else if (timeArray_validation === false)
@@ -217,6 +232,23 @@ function Create() {
               placeholder="Enter description"
               required
             />
+          </div>
+        </div>
+        <br />
+        <div className="form-group row">
+          <label htmlFor="polls" className="col-2 col-form-label">
+            Polls
+          </label>
+          <br />
+          <div className="col-10">
+            <input
+              type="checkbox"
+              className="form-control form-check-input"
+              id="poll"
+              checked={formData.poll}
+              onChange={handleChange}
+            /> 
+            Check if this is a poll
           </div>
         </div>
         <br />

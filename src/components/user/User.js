@@ -2,6 +2,7 @@ import React from "react";
 import "./user.css";
 
 function fetchUserDetails() {
+  var uni = localStorage.getItem("uni");
   var data = {
     name: "John Doe",
     uni: "jd1234",

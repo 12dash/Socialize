@@ -9,14 +9,16 @@ function ScrollableCardRow({ children }) {
 
 function Home(props) {
   const [upcoming, setUpcoming] = useState(null);
+  
 
   useEffect(() => {
+    var uni = localStorage.getItem("uni");
     var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
     var pathTemplate = "/homepage";
     var pathParams = {};
     var method = "GET";
     var body = {};
-    var additionalParams = { headers: {}, queryParams: {} };
+    var additionalParams = { headers: {userid :uni}, queryParams: {} };
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
@@ -24,6 +26,15 @@ function Home(props) {
         setUpcoming(JSON.parse(result.data.body));
       })
       .catch(function (error) {
+        setUpcoming([{
+          'id' : '12rkjbnacijld', 
+          'title' : 'AWS System Design',
+          'img_url' : "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/102017/logo_0.png?17TK91b1B6OvV2MFrCLfukw1c8oEaNr6&itok=vsanFiUj",
+          'location' : 'Uris Hall', 
+          'time' : '6:30 pm', 
+          'numPeople': 2,
+          'type' : 'Event',
+      }])
         console.log(error);
       });
   }, [props.url]);

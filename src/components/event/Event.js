@@ -2,6 +2,7 @@ import React from "react";
 import { Cards, PollingCards } from "../displayComponents/Cards";
 
 function getUpcomingData() {
+  var uni = localStorage.getItem("uni");
   var upcoming = [
     {
       id: "12rkjbnacijld",

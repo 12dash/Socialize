@@ -8,18 +8,28 @@ function ScrollableCardRow({ children }) {
 }
 
 function getUpcomingData(upcoming, setUpcoming, url) {
+  var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
   var pathTemplate = "/meetup/all";
   var pathParams = {};
   var method = "GET";
   var body = {};
-  var additionalParams = { headers: {}, queryParams: {} };
+  var additionalParams = { headers: {userid :uni}, queryParams: {} };
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
       setUpcoming(JSON.parse(result.data.body));
     })
     .catch(function (error) {
+      setUpcoming([{
+        'id' : '12rkjbnacijld', 
+        'title' : 'AWS System Design',
+        'img_url' : "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/102017/logo_0.png?17TK91b1B6OvV2MFrCLfukw1c8oEaNr6&itok=vsanFiUj",
+        'location' : 'Uris Hall', 
+        'time' : '6:30 pm', 
+        'numPeople': 2,
+        'type' : 'Meetup',
+    }])
       console.log(error);
     });
 }
@@ -37,6 +47,15 @@ function getPollingData(polling, setPolling, url) {
       setPolling(JSON.parse(result.data.body));
     })
     .catch(function (error) {
+      setPolling([{
+        'id' : '12rkjbnacijld', 
+        'title' : 'AWS System Design',
+        'img_url' : "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/102017/logo_0.png?17TK91b1B6OvV2MFrCLfukw1c8oEaNr6&itok=vsanFiUj",
+        'location' : 'Uris Hall', 
+        'time' : '6:30 pm', 
+        'numPeople': 2,
+        'type' : 'Meetup',
+    }])
       console.log(error);
     });
 }
@@ -81,7 +100,7 @@ function MeetUp(props) {
   useEffect(() => {
     getUpcomingData(upcoming, setUpcoming, props.url);
     getPollingData(polling, setPolling, props.url);
-  }, [props.url, polling, upcoming]);
+  }, [props.url]);
   return (
     <div className="">
       <br />
