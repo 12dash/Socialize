@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Navbar from "./components/navbar/Navbar";
 import Home from "./components/home/Home";
 import Event from "./components/event/Event";
 import StudyGroup from "./components/studyGroup/StudyGroup";
@@ -11,21 +10,25 @@ import Create from "./components/create/Create";
 import MeetUp from "./components/meetup/MeetUp";
 import User from "./components/user/User";
 import Specific from "./components/specific/Specific";
+import Login from "./components/authentication/Login";
+import Signup from "./components/authentication/Signup";
+import Navbar from "./components/navbar/Navbar";
+import Logout from "./components/authentication/Logout";
 
-const URL = "https://i9zqqcxfy5.execute-api.us-east-1.amazonaws.com/dev"
+const URL = "https://4xk070et44.execute-api.us-east-1.amazonaws.com/dev";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home url = {URL}/>,
+    element: <Home url={URL} />,
   },
   {
     path: "/event",
-    element: <Event url = {URL}/>,
+    element: <Event url={URL} />,
   },
   {
     path: "/studygroup",
-    element: <StudyGroup url = {URL}/>,
+    element: <StudyGroup url={URL} />,
   },
   {
     path: "/create",
@@ -33,27 +36,60 @@ const router = createBrowserRouter([
   },
   {
     path: "/meetup",
-    element: <MeetUp url = {URL}/>,
+    element: <MeetUp url={URL} />,
   },
   {
     path: "/user",
-    element: <User url = {URL}/>,
+    element: <User url={URL} />,
   },
   {
     path: "/specific",
-    element: <Specific url = {URL}/>,
+    element: <Specific url={URL} />,
+  },
+  {
+    path: "/logout",
+    element: <Logout url={URL} />,
+  },
+]);
+
+const authenticationRoutes = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login url={URL} />,
+  },
+  {
+    path: "/login",
+    element: <Login url={URL} />,
+  },
+  {
+    path: "/signup",
+    element: <Signup url={URL} />,
+  },
+  {
+    path: "*",
+    element: <Login url={URL} />,
   },
 ]);
 
 function App() {
-  return (
-    <div className="App">
-      <Navbar userName="John Doe"/>
-      <div className="container">
-        <RouterProvider router={router} />
+  var authenticated = localStorage.getItem("isAuthenticated");
+  var name = localStorage.getItem("name");
+  if (authenticated) {
+    return (
+      <div className="App">
+        <Navbar userName={name} />
+        <div className="container">
+          <RouterProvider router={router} />
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="App">
+        <RouterProvider router={authenticationRoutes} />
+      </div>
+    );
+  }
 }
 
 export default App;

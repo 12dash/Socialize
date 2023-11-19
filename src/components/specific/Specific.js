@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
 
+import Navbar from "../navbar/Navbar";
+
 var apigClientFactory = require("aws-api-gateway-client").default;
 
 function getData(type, id, setDetails, url) {
@@ -35,7 +37,6 @@ function Specifc(props) {
     getData(type, id, setDetails, props.url);
   }, [props.url, type, id]);
 
-  
   return (
     <div>
       <br />

@@ -25,21 +25,21 @@ function getUpcomingData(upcoming, setUpcoming, url) {
 }
 
 function getPollingData(polling, setPolling, url) {
-    var apigClient = apigClientFactory.newClient({ invokeUrl: url });
-    var pathTemplate = "/meetup/all";
-    var pathParams = {};
-    var method = "GET";
-    var body = {};
-    var additionalParams = { headers: {}, queryParams: {} };
-    apigClient
-      .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-      .then(function (result) {
-        setPolling(JSON.parse(result.data.body));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+  var apigClient = apigClientFactory.newClient({ invokeUrl: url });
+  var pathTemplate = "/meetup/all";
+  var pathParams = {};
+  var method = "GET";
+  var body = {};
+  var additionalParams = { headers: {}, queryParams: {} };
+  apigClient
+    .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+    .then(function (result) {
+      setPolling(JSON.parse(result.data.body));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 
 function MeetUp(props) {
   const [upcoming, setUpcoming] = useState(null);
@@ -49,7 +49,7 @@ function MeetUp(props) {
     if (polling !== null) {
       return upcoming.map((item) => (
         <PollingCards
-          key = {item.id}
+          key={item.id}
           pollingId={item.id}
           title={item.title}
           img_url={item.img_url}
@@ -64,7 +64,7 @@ function MeetUp(props) {
     if (upcoming !== null) {
       return upcoming.map((item) => (
         <Cards
-          key = {item.id}
+          key={item.id}
           cardId={item.id}
           title={item.title}
           img_url={item.img_url}
@@ -72,7 +72,7 @@ function MeetUp(props) {
           time={item.time}
           numPeople={item.numPeople}
           type={item.type}
-          url = {props.url}
+          url={props.url}
         />
       ));
     } else return <></>;
@@ -82,7 +82,6 @@ function MeetUp(props) {
     getUpcomingData(upcoming, setUpcoming, props.url);
     getPollingData(polling, setPolling, props.url);
   }, [props.url, polling, upcoming]);
-
   return (
     <div className="">
       <br />

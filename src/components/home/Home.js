@@ -11,7 +11,7 @@ function Home(props) {
   const [upcoming, setUpcoming] = useState(null);
 
   useEffect(() => {
-    var apigClient = apigClientFactory.newClient({invokeUrl: props.url});
+    var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
     var pathTemplate = "/homepage";
     var pathParams = {};
     var method = "GET";
@@ -20,6 +20,7 @@ function Home(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
+        console.log(result)
         setUpcoming(JSON.parse(result.data.body));
       })
       .catch(function (error) {

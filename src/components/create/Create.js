@@ -13,6 +13,9 @@ function Create() {
   const [location, setLocation] = useState("");
   const [locationArray, setLocationArray] = useState([]);
 
+  const [date, setDate] = useState("");
+  const [dateArray, setDateArray] = useState([]);
+
   const TimeComponent = () => {
     if (timeArray !== null) {
       return timeArray.map((item, index) => (
@@ -43,10 +46,29 @@ function Create() {
     } else return <></>;
   };
 
+  const DateComponent = () => {
+    if (dateArray !== null) {
+      return dateArray.map((item, index) => (
+        <div className="col-2" key={item}>
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => handleRemoveDate(index)}
+          >
+            {item}{" "}
+          </button>
+        </div>
+      ));
+    } else return <></>;
+  };
+
   const handleChange = (event) => {
     var { name, value } = event.target;
     name = event.target.id;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
   };
 
   const handleTimeChange = (event) => {
@@ -61,6 +83,12 @@ function Create() {
     const updatedTimeArray = [...timeArray];
     updatedTimeArray.splice(index, 1);
     setTimeArray(updatedTimeArray);
+  };
+
+  const handleRemoveDate = (index) => {
+    const updatedDaterray = [...dateArray];
+    updatedDaterray.splice(index, 1);
+    setDateArray(updatedDaterray);
   };
 
   const handleRemoveLocation = (index) => {
@@ -79,6 +107,18 @@ function Create() {
     }
   };
 
+  const handleDateArray = (event) => {
+    event.preventDefault();
+
+    if (date.trim() !== "") {
+      var val = date.trim().replace(" ", "");
+      if (!dateArray.includes(val)) {
+        setDateArray([...dateArray, val]);
+      }
+      setDate("");
+    }
+  };
+
   const handleLocationArray = (event) => {
     event.preventDefault();
 
@@ -94,20 +134,30 @@ function Create() {
     var category_validation = formData.category !== "";
     var timeArray_validation = timeArray.length > 0;
     var locationArray_validation = locationArray.length > 0;
+    var dateArray_validation = dateArray.length > 0;
 
     if (
       category_validation &&
       timeArray_validation &&
-      locationArray_validation
+      locationArray_validation &&
+      dateArray_validation
     ) {
-      console.log("Submit");
+      console.log("Submit", dateArray);
     } else {
-      if (category_validation === false) alert("Please select a category")
-      else if (timeArray_validation === false) alert("Please add at least 1 time")
-      else if (locationArray_validation === false) alert("Please add at least 1 location")
+      if (category_validation === false) alert("Please select a category");
+      else if (timeArray_validation === false)
+        alert("Please add at least 1 time");
+      else if (locationArray_validation === false)
+        alert("Please add at least 1 location");
+      else if (dateArray_validation === false)
+        alert("Please add at least 1 date");
       console.log("Error with form");
     }
   };
+
+  var username = "John Doe";
+  const today = new Date();
+  const formattedDate = today.toISOString().split("T")[0];
 
   return (
     <div>
@@ -217,6 +267,31 @@ function Create() {
         <br />
         <div className="row">{LocationComponent()}</div>
         <br />
+
+        <div className="form-group row">
+          <label htmlFor="date " className="col-2 col-form-label">
+            Date:
+          </label>
+          <div className="col-5">
+            <input
+              type="date"
+              className="form-control"
+              id="date"
+              value={date}
+              onChange={handleDateChange}
+              min={formattedDate}
+            />
+          </div>
+          <div className="col-2">
+            <button className="btn btn-secondary" onClick={handleDateArray}>
+              Add
+            </button>
+          </div>
+        </div>
+        <br />
+        <div className="row">{DateComponent()}</div>
+        <br />
+
         <button type="submit" className="btn btn-primary">
           Create
         </button>

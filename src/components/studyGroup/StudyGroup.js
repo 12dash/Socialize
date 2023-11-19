@@ -1,9 +1,11 @@
 import React from "react";
 
-function StudyGroup(){
-    return (
-        <>Study Group</>
-    )
+function StudyGroup() {
+  return (
+    <>
+      <div className="container">Study Group</div>
+    </>
+  );
 }
 
 export default StudyGroup;
