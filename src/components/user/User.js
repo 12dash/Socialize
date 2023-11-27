@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import "./user.css";
 
+/*
 function fetchUserDetails() {
   var uni = localStorage.getItem("uni");
   var data = {
@@ -12,10 +13,55 @@ function fetchUserDetails() {
     interests: ["Tech", "Writing"],
   };
   return data;
+}*/
+
+
+var apigClientFactory = require("aws-api-gateway-client").default;
+function fetchUserDetails(setData, url) {
+  var uni = localStorage.getItem("uni");
+  var apigClient = apigClientFactory.newClient({ invokeUrl: url });
+  var pathTemplate = "/profile";
+  var pathParams = {};
+  var method = "GET";
+  var body = { };
+  var additionalParams = { headers: { user_id: uni }, queryParams: {} };
+  apigClient
+    .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+    .then(function (result) {
+      console.log("submitted:", result.data.body);
+      var res = JSON.parse(result.data.body)
+      console.log(res.interest)
+      setData({
+        'name' : res.name, 
+        'location' :res.location,
+        'uni' : res.uni,
+        'phoneNum' : res.phoneno,
+        'interests' : res.interest,
+        'emailid' :res.emailId 
+      })
+      
+    })
+    .catch(function (error) {
+      console.log("Error:", error);
+    });
 }
 
-function User() {
-  var data = fetchUserDetails();
+function User(props) {
+  console.log(props.url)
+  
+  var [data, setData] = useState({
+    name: "",
+    uni: "",
+    emailid: "",
+    location: "",
+    phoneNum: "",
+    interests: ['']
+  })
+
+  useEffect(() => {
+    fetchUserDetails(setData, props.url);
+  }, [props.url]);
+
   return (
     <div className="">
       <br />

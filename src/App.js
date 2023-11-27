@@ -15,7 +15,8 @@ import Signup from "./components/authentication/Signup";
 import Navbar from "./components/navbar/Navbar";
 import Logout from "./components/authentication/Logout";
 
-const URL = "https://4xk070et44.execute-api.us-east-1.amazonaws.com/dev";
+const URL = "https://n8rffxphe1.execute-api.us-east-1.amazonaws.com/dev";
+//const URL = "https://apple";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/create",
-    element: <Create />,
+    element: <Create url={URL}/>,
   },
   {
     path: "/meetup",

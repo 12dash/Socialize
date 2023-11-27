@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import "./authentication.css";
 import logo from "../../logo.svg";
 
-function Signup() {
+var apigClientFactory = require("aws-api-gateway-client").default;
+
+function Signup(props) {
   const [data, setData] = useState({
     uni: "",
     email: "",
@@ -20,10 +22,33 @@ function Signup() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (data.password !== data.confirmPassword) {
+    const isColumbiaEmail = data.email.endsWith('@columbia.edu');
+    if (isColumbiaEmail === false){
+      alert('Please provide your columbia email id that ends with @columbia.edu')
+    }
+    else if (data.password !== data.confirmPassword) {
       alert("Password and cofirm password does not match");
-    } else {
+    } 
+    else {
       console.log(data);
+      var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
+      var pathTemplate = "/auth/signup";
+      var pathParams = {};
+      var method = "POST";
+      var body = {};
+      var additionalParams = { headers: { uni: data.uni, emailid : data.email, password : data.password }, queryParams: {} };
+      apigClient
+        .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+        .then(function (result) {
+          console.log(result.data.body);
+          var response = JSON.parse(result.data.body)
+          console.log(response)
+          //window.location.href = "/";
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
     }
   };
 

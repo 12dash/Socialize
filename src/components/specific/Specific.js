@@ -2,22 +2,41 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
+function register(activity_id, url) {
+  console.log('asjbk');
+  var uni = localStorage.getItem("uni");
+  var apigClient = apigClientFactory.newClient({ invokeUrl: url });
+  var pathTemplate = "/activity/register";
+  var pathParams = {};
+  var method = "POST";
+  var body = {
+    activity_id: "f5e57133-edf0-494f-a6eb-51043d1c95fb",
+  };
+  var additionalParams = { headers: { user_id: uni }, queryParams: {} };
+  apigClient
+    .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+    .then(function (result) {
+      console.log("submitted:", result);
+    })
+    .catch(function (error) {
+      console.log("Error:", error);
+    });
+}
 
 function getData(type, id, setDetails, url) {
   var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
   type = type.toLowerCase();
-  var pathTemplate = "/" + type + "/" + id;
-  console.log(pathTemplate);
+  var pathTemplate = "/activity/" + id;
   var pathParams = {};
   var method = "GET";
   var body = {};
-  var additionalParams = { headers: {userid :uni}, queryParams: {} };
+  var additionalParams = { headers: { user_id: uni }, queryParams: {} };
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
       console.log(result.data.body);
-      setDetails(JSON.parse(result.data.body));
+      setDetails(result.data.body);
     })
     .catch(function (error) {
       console.log(error);
@@ -53,16 +72,16 @@ function Specifc(props) {
       <br />
       <div className="row align-items-center">
         <div className="col-4 offset-1 text-center">
-          <img
+          {/*<img
             src={details.img_url}
             className="card-img-top mx-auto"
             alt="card logo"
             style={{ width: "50%" }}
-          />
+  />*/}
           <h2>{details.title}</h2>
           <div className="row ">
             <div className="col-6">
-              <i className="fa-regular fa-clock" /> {details.time}
+              <i className="fa-regular fa-clock" /> {details.datetime}
             </div>
             <div className="col-6">
               <i className="fa-solid fa-location-dot" /> {details.location}
@@ -71,12 +90,17 @@ function Specifc(props) {
           <br />
         </div>
         <div className="col-2 offset-4 ">
-          <button className="btn btn-primary">Register</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => register(id, props.url)}
+          >
+            Register
+          </button>
         </div>
       </div>
       <br />
       <h2>Details</h2>
-      {details.details}
+      {details.description}
     </div>
   );
 }

@@ -18,12 +18,12 @@ function Home(props) {
     var pathParams = {};
     var method = "GET";
     var body = {};
-    var additionalParams = { headers: {userid :uni}, queryParams: {} };
+    var additionalParams = { headers: {user_id :uni}, queryParams: {} };
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log(result)
-        setUpcoming(JSON.parse(result.data.body));
+        console.log(result.data.body)
+        setUpcoming((result.data.body));
       })
       .catch(function (error) {
         setUpcoming([{
@@ -43,14 +43,14 @@ function Home(props) {
     if (upcoming !== null) {
       return upcoming.map((item) => (
         <Cards
-          key={item.id}
-          cardId={item.id}
+          key={item.activity_id}
+          cardId={item.activity_id}
           title={item.title}
           img_url={item.img_url}
           location={item.location}
-          time={item.time}
-          numPeople={item.numPeople}
-          type={item.type}
+          time={item.datetime}
+          numPeople={item.attendees.length}
+          type={item.category}
         />
       ));
     } else return <></>;

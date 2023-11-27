@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
-function Create() {
+var apigClientFactory = require("aws-api-gateway-client").default;
+
+function Create(props) {
   const [formData, setFormData] = useState({
     category: "",
     name: "",
@@ -65,7 +67,7 @@ function Create() {
   const handleChange = (event) => {
     var { name, value, type, checked } = event.target;
     name = event.target.id;
-    value = type === 'checkbox' ? checked : value;
+    value = type === "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: value });
   };
 
@@ -144,18 +146,46 @@ function Create() {
       locationArray_validation &&
       dateArray_validation
     ) {
-      if (formData.poll === false){
-        if (timeArray.length > 1){
-          alert("It seems you are trying to add more than 1 time but its not a poll. Either mark it as poll or choose one time");
+      if (formData.poll === false) {
+        if (timeArray.length > 1) {
+          alert(
+            "It seems you are trying to add more than 1 time but its not a poll. Either mark it as poll or choose one time"
+          );
         }
-        if (locationArray.length > 1){
-          alert("It seems you are trying to add more than 1 location but its not a poll. Either mark it as poll or choose one location");
+        if (locationArray.length > 1) {
+          alert(
+            "It seems you are trying to add more than 1 location but its not a poll. Either mark it as poll or choose one location"
+          );
         }
-        if (dateArray.length > 1){
-          alert("It seems you are trying to add more than 1 date but its not a poll. Either mark it as poll or choose one date");
-        }
-        else {
+        if (dateArray.length > 1) {
+          alert(
+            "It seems you are trying to add more than 1 date but its not a poll. Either mark it as poll or choose one date"
+          );
+        } else {
           console.log("Submit", dateArray, formData);
+          var uni = localStorage.getItem("uni");
+          var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
+          var pathTemplate = "/create/activity";
+          var pathParams = {};
+          var method = "POST";
+          var body = {
+            title: formData.name,
+            description: formData.description,
+            date : dateArray[0], 
+            time: '13:55:00',
+            location: locationArray[0], 
+            category: formData.category
+
+          };
+          var additionalParams = { headers: { user_id: uni, 'Content-Type':'application/json' }, queryParams: {} };
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then(function (result) {
+              console.log("submitted:", result)
+            })
+            .catch(function (error) {
+              console.log("Error:", error);
+            });
         }
       }
     } else {
@@ -191,9 +221,9 @@ function Create() {
               required
             >
               <option value={null}>Choose...</option>
-              <option value="meetup">Meetup</option>
-              <option value="event">Event</option>
-              <option value="studyGroup">Study Group</option>
+              <option value="Meetup">Meetup</option>
+              <option value="Event">Event</option>
+              <option value="Study Group">Study Group</option>
             </select>
           </div>
         </div>
@@ -246,7 +276,7 @@ function Create() {
               id="poll"
               checked={formData.poll}
               onChange={handleChange}
-            /> 
+            />
             Check if this is a poll
           </div>
         </div>

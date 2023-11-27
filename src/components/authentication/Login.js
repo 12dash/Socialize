@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import "./authentication.css";
 import logo from "../../logo.svg";
 
-function Login() {
+var apigClientFactory = require("aws-api-gateway-client").default;
+
+function Login(props) {
   const [uni, setUni] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,11 +20,32 @@ function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("uni:", uni, "Password:", password);
-    localStorage.setItem("uni", uni);
-    localStorage.setItem("isAuthenticated", true);
-    localStorage.setItem("name", "John Doe");
-    window.location.href = "/";
+    var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
+    var pathTemplate = "/auth/login";
+    var pathParams = {};
+    var method = "GET";
+    var body = {};
+    var additionalParams = { headers: { uni: uni, password : password }, queryParams: {} };
+    apigClient
+      .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+      .then(function (result) {
+        console.log(result.data.body);
+        var response = JSON.parse(result.data.body)
+        var user_name = result.data.body['userName']
+
+        if(response["present"] === true){
+          localStorage.setItem("uni", uni);
+          localStorage.setItem("isAuthenticated", true);
+          localStorage.setItem("name", "John Doe");
+          //window.location.href = "/";
+        }
+        else{
+          alert(response['err'])
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (

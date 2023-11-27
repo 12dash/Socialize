@@ -1,16 +1,16 @@
 import React from "react";
-import "./cards.css"
+import "./cards.css";
 
-export const Cards = (props ) => {
+export const Cards = (props) => {
   var num = props.numPeople ? props.numPeople : 0;
   return (
-    <div className="card col-3" >
-      <img
+    <div className="card col-3">
+      {/*<img
         src={props.img_url}
         className="card-img-top mx-auto"
         alt="card logo"
         style={{ width: "50%" }}
-      />
+  />*/}
       <div className="card-body text-center">
         <h5 className="card-title">{props.title}</h5>
         <div className="card-text">
@@ -31,18 +31,21 @@ export const Cards = (props ) => {
           </div>
         </div>
         <br />
-        <a href={"/specific?id="+props.cardId+'&type='+props.type} className="btn btn-outline-dark">
+        <a
+          href={"/specific?id=" + props.cardId + "&type=" + props.type}
+          className="btn btn-outline-dark"
+        >
           {props.title}
         </a>
       </div>
     </div>
   );
-}
+};
 
 export const PollingCards = (props) => {
   var num = props.numPeople ? props.numPeople : 0;
   return (
-    <div className="card col-3" >
+    <div className="card col-3">
       <img
         src={props.img_url}
         className="card-img-top mx-auto"
@@ -51,17 +54,22 @@ export const PollingCards = (props) => {
       />
       <div className="card-body text-center">
         <h5 className="card-title">{props.title}</h5>
-        <div className="card-text" style={{textAlign:"center"}}>
+        <div className="card-text" style={{ textAlign: "center" }}>
           <div className="row">
-              <i className="fa-solid fa-users" /> 
-              <p>{num} people</p>
-              <p>{props.type}</p>
+            <i className="fa-solid fa-users" />
+            <p>{num} people</p>
+            <p>{props.type}</p>
           </div>
         </div>
-        <a href={"/specificPolling?id="+props.pollingId+'&type='+props.type} className="btn btn-outline-dark">
+        <a
+          href={
+            "/specificPolling?id=" + props.pollingId + "&type=" + props.type
+          }
+          className="btn btn-outline-dark"
+        >
           {props.title}
         </a>
       </div>
     </div>
   );
-}
+};
