@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import "./user.css";
+import { Link } from "react-router-dom";
 
 /*
 function fetchUserDetails() {
@@ -17,10 +18,11 @@ function fetchUserDetails() {
 
 
 var apigClientFactory = require("aws-api-gateway-client").default;
+
 function fetchUserDetails(setData, url) {
   var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
-  var pathTemplate = "/profile";
+  var pathTemplate = "/profile/view";
   var pathParams = {};
   var method = "GET";
   var body = { };
@@ -93,7 +95,7 @@ function User(props) {
         <button type='button' className="btn btn-outline-primary" style={{marginRight:"5px"}}key={index}>{interest}</button>
       ))}</div>
       </div>
-      <button type="button" className="btn btn-primary">Edit</button>
+      <Link to="/user/profile_edit"><button type="button" className="btn btn-primary">Edit</button></Link>
     </div>
   );
 }

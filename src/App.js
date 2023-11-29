@@ -14,6 +14,7 @@ import Login from "./components/authentication/Login";
 import Signup from "./components/authentication/Signup";
 import Navbar from "./components/navbar/Navbar";
 import Logout from "./components/authentication/Logout";
+import ProfileEdit from "./components/user/ProfileEdit";
 
 const URL = "https://n8rffxphe1.execute-api.us-east-1.amazonaws.com/dev";
 //const URL = "https://apple";
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: <User url={URL} />,
+  },
+  {
+    path: "/user/profile_edit",
+    element: <ProfileEdit url={URL} />,
   },
   {
     path: "/specific",
@@ -73,8 +78,13 @@ const authenticationRoutes = createBrowserRouter([
 ]);
 
 function App() {
+  localStorage.setItem("isAuthenticated", true);
+  localStorage.setItem("name", 12345);
+  localStorage.setItem("uni", 12345);
+
   var authenticated = localStorage.getItem("isAuthenticated");
   var name = localStorage.getItem("name");
+  
   if (authenticated) {
     return (
       <div className="App">
