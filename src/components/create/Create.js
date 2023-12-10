@@ -10,8 +10,10 @@ function Create(props) {
     poll: false,
   });
 
-  const [time, setTime] = useState("");
   const [timeArray, setTimeArray] = useState([]);
+  const [hour, setHour] = useState("01");
+  const [minute, setMinute] = useState("00");
+  const [period, setPeriod] = useState("PM");
 
   const [location, setLocation] = useState("");
   const [locationArray, setLocationArray] = useState([]);
@@ -19,43 +21,21 @@ function Create(props) {
   const [date, setDate] = useState("");
   const [dateArray, setDateArray] = useState([]);
 
-  const TimeComponent = () => {
-    if (timeArray !== null) {
-      return timeArray.map((item, index) => (
-        <div className="col-1" key={item}>
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => handleRemoveTime(index)}
-          >
-            {item}{" "}
-          </button>
-        </div>
-      ));
-    } else return <></>;
-  };
+  const hours = Array.from({ length: 12 }, (_, index) =>
+    String(index + 1).padStart(2, "0")
+  );
+  const minutes = Array.from({ length: 4 }, (_, index) =>
+    String(index * 15).padStart(2, "0")
+  );
+  const periods = ["AM", "PM"];
 
-  const LocationComponent = () => {
-    if (locationArray !== null) {
-      return locationArray.map((item, index) => (
+  const CreateArrayComponents = (array, setArray) => {
+    if (array !== null) {
+      return array.map((item, index) => (
         <div className="col-2" key={item}>
           <button
             className="btn btn-outline-secondary"
-            onClick={() => handleRemoveLocation(index)}
-          >
-            {item}{" "}
-          </button>
-        </div>
-      ));
-    } else return <></>;
-  };
-
-  const DateComponent = () => {
-    if (dateArray !== null) {
-      return dateArray.map((item, index) => (
-        <div className="col-2" key={item}>
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => handleRemoveDate(index)}
+            onClick={() => handleRemove(index, array, setArray)}
           >
             {item}{" "}
           </button>
@@ -71,49 +51,31 @@ function Create(props) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
+  const handleRemove = (index, setArray, updateArray) => {
+    const updatedArray = [...setArray];
+    updatedArray.splice(index, 1);
+    updateArray(updatedArray);
   };
 
-  const handleTimeChange = (event) => {
-    setTime(event.target.value);
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
   };
 
   const handleLocationChange = (event) => {
     setLocation(event.target.value);
   };
 
-  const handleRemoveTime = (index) => {
-    const updatedTimeArray = [...timeArray];
-    updatedTimeArray.splice(index, 1);
-    setTimeArray(updatedTimeArray);
-  };
-
-  const handleRemoveDate = (index) => {
-    const updatedDaterray = [...dateArray];
-    updatedDaterray.splice(index, 1);
-    setDateArray(updatedDaterray);
-  };
-
-  const handleRemoveLocation = (index) => {
-    const updatedLocationArray = [...locationArray];
-    updatedLocationArray.splice(index, 1);
-    setLocationArray(updatedLocationArray);
-  };
-
   const handleTimeArray = (event) => {
     event.preventDefault();
-
-    if (time.trim() !== "") {
-      var val = time.trim().replace(" ", "");
-      setTimeArray([...timeArray, val]);
-      setTime("");
-    }
+    var val = hour + ":" + minute + " " + period;
+    setTimeArray([...timeArray, val]);
+    setHour("01");
+    setMinute("00");
+    setPeriod("PM");
   };
 
   const handleDateArray = (event) => {
     event.preventDefault();
-
     if (date.trim() !== "") {
       var val = date.trim().replace(" ", "");
       if (!dateArray.includes(val)) {
@@ -162,26 +124,38 @@ function Create(props) {
             "It seems you are trying to add more than 1 date but its not a poll. Either mark it as poll or choose one date"
           );
         } else {
-          console.log("Submit", dateArray, formData);
+          console.log("Submit", formData);
           var uni = localStorage.getItem("uni");
-          var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
+          var apigClient = apigClientFactory.newClient({
+            invokeUrl: props.url,
+          });
           var pathTemplate = "/create/activity";
           var pathParams = {};
           var method = "POST";
+          var [hour, minutePeriod] = timeArray[0].split(":");
+          var [minute, period] = minutePeriod.split(" ");
+
+          if (period === "PM") {
+            hour = +hour + 12;
+          }
+          var time = String(hour) + ":" + minute + ":00";
+
           var body = {
             title: formData.name,
             description: formData.description,
-            date : dateArray[0], 
-            time: '13:55:00',
-            location: locationArray[0], 
-            category: formData.category
-
+            date: dateArray[0],
+            time: time,
+            location: locationArray[0],
+            category: formData.category,
           };
-          var additionalParams = { headers: { user_id: uni, 'Content-Type':'application/json' }, queryParams: {} };
+          var additionalParams = {
+            headers: { user_id: uni, "Content-Type": "application/json" },
+            queryParams: {},
+          };
           apigClient
             .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
             .then(function (result) {
-              console.log("submitted:", result)
+              console.log("submitted:", result);
             })
             .catch(function (error) {
               console.log("Error:", error);
@@ -200,8 +174,7 @@ function Create(props) {
     }
   };
 
-  const today = new Date();
-  const formattedDate = today.toISOString().split("T")[0];
+  const formattedDate = new Date().toISOString().split("T")[0];
 
   return (
     <div>
@@ -277,32 +250,65 @@ function Create(props) {
               checked={formData.poll}
               onChange={handleChange}
             />
-            Check if this is a poll
+            <p style={{ fontSize: "75%" }}>Check if this is a poll</p>
           </div>
         </div>
         <br />
         <div className="form-group row">
-          <label htmlFor="time " className="col-2 col-form-label">
-            Time:
+          <label htmlFor="time" className="col-2 col-form-label">
+            Enter Time:
           </label>
-          <div className="col-5">
-            <input
-              type="text"
-              className="form-control"
-              id="time"
-              value={time}
-              onChange={handleTimeChange}
-              placeholder="e.g., 6:30 pm"
-            />
+          <div className="col-1">
+            <select
+              className="form-select"
+              value={hour}
+              onChange={(e) => setHour(e.target.value)}
+            >
+              {hours.map((h) => (
+                <option key={h} value={h}>
+                  {h}
+                </option>
+              ))}
+            </select>
           </div>
+          <div className="col-1">
+            <select
+              className="form-select"
+              value={minute}
+              onChange={(e) => setMinute(e.target.value)}
+            >
+              {minutes.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-1">
+            <select
+              className="form-select"
+              value={period}
+              onChange={(e) => setPeriod(e.target.value)}
+            >
+              {periods.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="col-2">
             <button className="btn btn-secondary" onClick={handleTimeArray}>
               Add
             </button>
           </div>
         </div>
+
         <br />
-        <div className="row">{TimeComponent()}</div>
+        <div className="row">
+          {CreateArrayComponents(timeArray, setTimeArray)}
+        </div>
         <br />
 
         <div className="form-group row">
@@ -326,7 +332,9 @@ function Create(props) {
           </div>
         </div>
         <br />
-        <div className="row">{LocationComponent()}</div>
+        <div className="row">
+          {CreateArrayComponents(locationArray, setLocationArray)}
+        </div>
         <br />
 
         <div className="form-group row">
@@ -350,7 +358,9 @@ function Create(props) {
           </div>
         </div>
         <br />
-        <div className="row">{DateComponent()}</div>
+        <div className="row">
+          {CreateArrayComponents(dateArray, setDateArray)}
+        </div>
         <br />
 
         <button type="submit" className="btn btn-primary">

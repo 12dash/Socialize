@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "./authentication.css";
 import logo from "../../logo.svg";
@@ -31,13 +31,12 @@ function Login(props) {
       .then(function (result) {
         console.log(result.data.body);
         var response = JSON.parse(result.data.body)
-        var user_name = result.data.body['userName']
 
         if(response["present"] === true){
           localStorage.setItem("uni", uni);
           localStorage.setItem("isAuthenticated", true);
           localStorage.setItem("name", "John Doe");
-          //window.location.href = "/";
+          window.location.href = "/";
         }
         else{
           alert(response['err'])
@@ -58,7 +57,7 @@ function Login(props) {
         <div className="col-4 d-flex align-items-center justify-content-center">
           <form onSubmit={handleSubmit}>
             <div className="row">
-              <img className="logo" src={logo} />
+              <img className="logo" src={logo} alt="columbia"/>
             </div>
             <div className="row">
               <div className="form-group">

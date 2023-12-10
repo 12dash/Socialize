@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "./authentication.css";
 import logo from "../../logo.svg";
@@ -42,8 +42,11 @@ function Signup(props) {
         .then(function (result) {
           console.log(result.data.body);
           var response = JSON.parse(result.data.body)
+
+          localStorage.setItem("uni", data.uni);
+          localStorage.setItem("email", data.email);
           console.log(response)
-          //window.location.href = "/";
+          window.location.href = "/createprofile";
         })
         .catch(function (error) {
           console.log(error);
@@ -62,7 +65,7 @@ function Signup(props) {
         <div className="col-4 d-flex align-items-center justify-content-center">
           <form onSubmit={handleSubmit}>
             <div className="row">
-              <img className="logo" src={logo} />
+              <img className="logo" src={logo} alt="columbia"/>
             </div>
             <div className="row">
               <div className="form-group">

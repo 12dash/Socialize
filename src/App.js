@@ -15,9 +15,10 @@ import Signup from "./components/authentication/Signup";
 import Navbar from "./components/navbar/Navbar";
 import Logout from "./components/authentication/Logout";
 import ProfileEdit from "./components/user/ProfileEdit";
+import CreateProfile from "./components/user/CreateProfile";
 
-const URL = "https://n8rffxphe1.execute-api.us-east-1.amazonaws.com/dev";
-//const URL = "https://apple";
+// const URL = "https://n8rffxphe1.execute-api.us-east-1.amazonaws.com/dev";
+const URL = "https://apple";
 
 const router = createBrowserRouter([
   {
@@ -72,15 +73,21 @@ const authenticationRoutes = createBrowserRouter([
     element: <Signup url={URL} />,
   },
   {
+    path: '/createprofile',
+    element: <CreateProfile url={URL} />
+  },
+  {
     path: "*",
     element: <Login url={URL} />,
   },
 ]);
 
 function App() {
-  localStorage.setItem("isAuthenticated", true);
-  localStorage.setItem("name", 12345);
+  //localStorage.setItem("isAuthenticated", true);
+  //localStorage.setItem("name", 12345);
+  
   localStorage.setItem("uni", 12345);
+  localStorage.setItem("email", '12345@columbia.edu');
 
   var authenticated = localStorage.getItem("isAuthenticated");
   var name = localStorage.getItem("name");
