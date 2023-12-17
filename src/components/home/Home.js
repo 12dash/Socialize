@@ -25,8 +25,7 @@ function Home(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log("body:"+result.data.body);
-        if (!(Array.isArray(result.data.body))) {
+        if (result.data.body) {
           setUpcoming(result.data.body.upcoming);
           setActivities(result.data.body["activities_created"]);
           setPolls(result.data.body["polls"]);

@@ -24,7 +24,6 @@ function PollComponent(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log(result.data.body);
         setData(result.data.body);
         setLoading(false);
       })

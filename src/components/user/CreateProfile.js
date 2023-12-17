@@ -84,7 +84,6 @@ function CreateProfile(props) {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(data);
     var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
     var pathTemplate = "/profile/create";
     var pathParams = {};

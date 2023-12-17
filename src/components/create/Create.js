@@ -46,7 +46,6 @@ function Create(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Submit", formData);
     var uni = localStorage.getItem("uni");
     setLoading(true);
 
@@ -81,7 +80,6 @@ function Create(props) {
       apigClient
         .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
         .then(function (result) {
-          console.log("submitted:", result);
           setShowBanner(true);
           setLoading(false);
         })
@@ -108,7 +106,6 @@ function Create(props) {
       apigClient
         .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
         .then(function (result) {
-          console.log("submitted:", result);
           setShowBanner(true);
           setLoading(false);
         })

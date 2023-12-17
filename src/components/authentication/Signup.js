@@ -43,7 +43,6 @@ function Signup(props) {
     } else if (data.password !== data.confirmPassword) {
       alert("Password and cofirm password does not match");
     } else {
-      console.log(data);
       var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
       var pathTemplate = "/auth/signup";
       var pathParams = {};
@@ -60,12 +59,10 @@ function Signup(props) {
       apigClient
         .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
         .then(function (result) {
-          console.log(result.data.body);
           var response = JSON.parse(result.data.body);
 
           localStorage.setItem("uni", data.uni);
           localStorage.setItem("email", data.email);
-          console.log(response);
           setShowBanner(true);
         })
         .catch(function (error) {

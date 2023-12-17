@@ -52,7 +52,6 @@ function InterestComponent(props) {
   }
 
   const Component = () => {
-    console.log(data)
     if (data !== null) {
       return data.map((item) => (
         <Cards

@@ -15,7 +15,6 @@ function register(activity_id, url) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      console.log("submitted:", result);
     })
     .catch(function (error) {
       console.log("Error:", error);
@@ -35,7 +34,6 @@ function getData(type, id, setDetails, url, setLoading) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      console.log(result.data.body);
       setDetails(result.data.body);
       setLoading(false);
     })

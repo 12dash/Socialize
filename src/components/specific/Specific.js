@@ -39,7 +39,6 @@ function getData(type, id, setDetails, url, setLoading) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      console.log(result.data.body);
       setDetails(result.data.body);
       setLoading(false);
     })
