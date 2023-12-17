@@ -38,7 +38,7 @@ function PollComponent(props) {
             category: "Event",
           },
         ]);
-       //console.log(error);
+       console.log(error);
       });
   }, [props.url, props.tag]);
 

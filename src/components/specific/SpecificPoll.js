@@ -15,7 +15,6 @@ function register(activity_id, url, setAlert) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      console.log(result.data.body)
       var res = result.data.body
       if (res['already_registered'] === true){
         setAlert("User already marked interest")

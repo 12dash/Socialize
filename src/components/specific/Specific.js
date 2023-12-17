@@ -40,7 +40,7 @@ function getData(type, id, setDetails, url, setLoading) {
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
       if (result.data.body) {
-        console.log(result.data.body);
+        //console.log(result.data.body);
         setDetails(result.data.body);
       }
 
