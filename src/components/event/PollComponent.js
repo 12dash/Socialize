@@ -68,7 +68,7 @@ function PollComponent(props) {
           key={item.poll_id}
           pollingId={item.poll_id}
           title={item.title}
-          numPeople={item.paticipant_count}
+          numPeople={item.participants_count}
           type={item.category}
         />
       ));
