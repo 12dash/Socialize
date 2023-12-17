@@ -2,6 +2,7 @@ import React from "react";
 import InterestComponent from "./InterestComponent";
 import PollComponent from "./PollComponent";
 import PersonalizeEvent from "./PersonalizeEvent";
+import SearchComponent from "./SearchComponent";
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -16,6 +17,9 @@ function Event(props) {
       <br />
       <h1>Event</h1>
       <hr />
+      <SearchComponent url={props.url} />
+      <br />
+      <h5>Suggested for you</h5>
       <PersonalizeEvent url = {props.url} />
       <br />
       <h5>

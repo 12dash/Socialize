@@ -1,20 +1,8 @@
-import React, {useState} from "react";
+import React from "react";
 import PersonalizeStudyGroup from "./PersonalizeStudyGroup";
 import SearchComponent from "./SearchComponent";
-var apigClientFactory = require("aws-api-gateway-client").default;
 
 function StudyGroup(props) {
-  const [text, setText] = useState('')
-
-  const handleTextChange = (event) => {
-    setText(event.target.value())
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
-  }
-
   return (
     <div className="">
       <br />
@@ -22,7 +10,7 @@ function StudyGroup(props) {
       <hr />
       <SearchComponent url={props.url} />
       <br />
-      <h4>Study Group suggested for you</h4>
+      <h5>Suggested for you</h5>
       <PersonalizeStudyGroup url={props.url} />
   
       {/*<PollComponent url={props.url} tag={interest_} />*/}

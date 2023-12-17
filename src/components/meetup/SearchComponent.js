@@ -25,7 +25,7 @@ function SearchComponent(props) {
       headers: { user_id: uni },
       queryParams: {
         search_query: text,
-        category: "Study Group",
+        category: "Meetup",
       },
     };
     apigClient

@@ -2,8 +2,7 @@ import React from "react";
 import InterestComponent from "./InterestComponent";
 import PollComponent from "./PollComponent";
 import PersonalizeMeetup from "./PersonalizeMeetup";
-
-var apigClientFactory = require("aws-api-gateway-client").default;
+import SearchComponent from "./SearchComponent";
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -18,6 +17,10 @@ function MeetUp(props) {
       <br />
       <h1>Meetup</h1>
       <hr />
+      <SearchComponent url={props.url} />
+      <br />
+      <hr />
+      <h5>Suggested for you</h5>
       <PersonalizeMeetup url={props.url} />
       <br />
       <h5>
