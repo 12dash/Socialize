@@ -103,6 +103,7 @@ function ProfileEdit(props) {
       .then(function (result) {
         localStorage.setItem("interest", interestArray);
         setLoading(false);
+        window.location.href = "/user";
       })
       .catch(function (error) {
         console.log("Error:", error);
