@@ -1,4 +1,6 @@
 import React, {useState} from "react";
+import PersonalizeStudyGroup from "./PersonalizeStudyGroup";
+import SearchComponent from "./SearchComponent";
 var apigClientFactory = require("aws-api-gateway-client").default;
 
 function StudyGroup(props) {
@@ -18,25 +20,11 @@ function StudyGroup(props) {
       <br />
       <h1>Study Group</h1>
       <hr />
-      <form onSubmit={handleSubmit}>
-        <div className="form-group row">
-          <label className="col-sm-1 col-form-label" htmlFor="name">
-            Search
-          </label>
-          <div className="col-sm-10">
-            <input
-              type="text"
-              className="form-control"
-              id="name"
-              value={text}
-              onChange={handleTextChange}
-              required
-            />
-          </div>
-        </div>
-        </ form>
+      <SearchComponent url={props.url} />
       <br />
-      <h3>Currently Polling</h3>
+      <h4>Study Group suggested for you</h4>
+      <PersonalizeStudyGroup url={props.url} />
+  
       {/*<PollComponent url={props.url} tag={interest_} />*/}
     </div>
   );

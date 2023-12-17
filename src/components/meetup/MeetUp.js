@@ -1,5 +1,7 @@
 import React from "react";
 import InterestComponent from "./InterestComponent";
+import PollComponent from "./PollComponent";
+import PersonalizeMeetup from "./PersonalizeMeetup";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
 
@@ -16,6 +18,7 @@ function MeetUp(props) {
       <br />
       <h1>Meetup</h1>
       <hr />
+      <PersonalizeMeetup url={props.url} />
       <br />
       <h5>
         Because you are interested in <span>{interest_}</span>
@@ -23,7 +26,7 @@ function MeetUp(props) {
       <InterestComponent url={props.url} tag={interest_} />
       <br />
       <h3>Currently Polling</h3>
-      {/*<PollComponent url={props.url} tag={interest_} />*/}
+      {<PollComponent url={props.url} category = 'Meetup'/>}
     </div>
   );
 }

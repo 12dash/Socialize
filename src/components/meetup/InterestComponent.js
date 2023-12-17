@@ -13,7 +13,7 @@ function InterestComponent(props) {
     var pathParams = {};
     var method = "POST";
     var body = {
-      category: "Event",
+      category: "Meetup",
       tag: props.tag,
     };
     var additionalParams = { headers: { user_id: uni }, queryParams: {} };
@@ -21,8 +21,6 @@ function InterestComponent(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log("result body: ", result.data.body);
-        console.log("result length : ", result.data.body.length);
         if (result.data.body.length > 0) {
           setData(result.data.body);
         } else {

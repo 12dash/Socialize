@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { PollingCards } from "../displayComponents/Cards";
+import { Cards, PollingCards } from "../displayComponents/Cards";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
 
-function PollComponent(props) {
+function PersonalizeEvent(props) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
     var uni = localStorage.getItem("uni");
     var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
-    var pathTemplate = "/poll/category";
+    var pathTemplate = "/recommendation/personalize-event";
     var pathParams = {};
     var method = "GET";
-    var body = {
-      category: "Event",
-      tag: props.tag,
-    };
-    var additionalParams = { headers: { user_id: uni, category: props.category }, queryParams: {} };
+    var body = {};
+    setLoading(true);
+    var additionalParams = { headers: { user_id: uni }, queryParams: {} };
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log(result.data.body);
-        setData(result.data.body);
+        if (result.data.body.length > 0){
+            setData(result.data.body);
+        }else{
+            setData(null);
+        }
+        setLoading(false);
+        
       })
       .catch(function (error) {
         setData([
@@ -36,7 +39,8 @@ function PollComponent(props) {
             category: "Event",
           },
         ]);
-       //console.log(error);
+        console.log(error);
+        setLoading(false);
       });
   }, [props.url, props.tag]);
 
@@ -45,23 +49,33 @@ function PollComponent(props) {
   }
 
   const Component = () => {
+    console.log(data)
     if (data !== null) {
       return data.map((item) => (
-        <PollingCards
-          key={item.poll_id}
-          pollingId={item.poll_id}
+        <Cards
+          key={item.activity_id}
+          cardId={item.activity_id}
           title={item.title}
-          numPeople={item.paticipant_count}
+          img_url={item.img_url}
+          location={item.location}
+          time={item.datetime}
+          numPeople={item.attendees.length}
           type={item.category}
         />
       ));
     } else return <></>;
   };
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
+     {loading && (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      )}
       <ScrollableCardRow>{Component()}</ScrollableCardRow>
     </>
   );
 }
-export default PollComponent;
+export default PersonalizeEvent;
