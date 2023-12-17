@@ -40,6 +40,7 @@ function getData(type, id, setDetails, url, setLoading) {
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
       if (result.data.body) {
+        console.log(result.data.body);
         setDetails(result.data.body);
       }
 
@@ -59,6 +60,7 @@ function getData(type, id, setDetails, url, setLoading) {
       time: "6:30 pm",
       numPeople: 2,
       type: "Meetup",
+      tags: ["Tech"],
     },
   ]);
 }
@@ -72,6 +74,7 @@ function Specifc(props) {
   const [details, setDetails] = useState({
     attendees: [],
     title: null,
+    tags: [],
   });
   const [showBanner, setShowBanner] = useState(false);
 
@@ -104,6 +107,28 @@ function Specifc(props) {
     else return <></>;
   };
 
+  const ShowTags = () => {
+    if (details.tags) {
+      return (
+        <div className="row">
+          <div className="col-1">
+            {" "}
+            <b>Tags :</b>
+          </div>
+          <div className="col-10">
+            <div className="row">
+              {details["tags"].map((i) => (
+                <div className="col-3" key={i} value={i}>
+                  <button className="btn btn-outline-secondary">{i}</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+  };
+
   if (loading) {
     return (
       <div className="spinner-border" role="status">
@@ -127,8 +152,7 @@ function Specifc(props) {
             </div>
             <div className="row">
               <div className="col-12">
-                <i className="fa-solid fa-users" />{" "}
-                {details.attendees.length}
+                <i className="fa-solid fa-users" /> {details.attendees.length}
               </div>
             </div>
 
@@ -148,8 +172,15 @@ function Specifc(props) {
         </div>
         <br />
         {AlertComponenet()}
-        <h2>Details</h2>
-        {details.description}
+        <br />
+        {ShowTags()}
+        <br />
+        <div className="row">
+          <h2>Details</h2>
+          <hr />
+          {details.description}
+        </div>
+        <br />
       </div>
     );
   }
