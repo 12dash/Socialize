@@ -63,7 +63,10 @@ function SpecifcPoll(props) {
   const id = queryParams.get("id");
   const type = queryParams.get("type");
 
-  const [details, setDetails] = useState({});
+  const [details, setDetails] = useState({
+    title : null, 
+    participants_count: 0,
+  });
 
   useEffect(() => {
     getData(type, id, setDetails, props.url, setLoading);

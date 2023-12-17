@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
-function register(activity_id, url,setRegisterLoading, setShowBanner) {
+function register(activity_id, url, setRegisterLoading, setShowBanner) {
   var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
   var pathTemplate = "/activity/register";
@@ -67,7 +67,9 @@ function Specifc(props) {
   const id = queryParams.get("id");
   const type = queryParams.get("type");
 
-  const [details, setDetails] = useState({});
+  const [details, setDetails] = useState({
+    attendees : []
+  });
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
@@ -120,12 +122,21 @@ function Specifc(props) {
                 <i className="fa-solid fa-location-dot" /> {details.location}
               </div>
             </div>
+            <div className="row">
+              <div className="col-12">
+                <i className="fa-solid fa-users" />{" "}
+                {details["attendees"].length}
+              </div>
+            </div>
+            
             <br />
           </div>
           <div className="col-2 offset-4 ">
             <button
               className="btn btn-primary"
-              onClick={() => register(id, props.url, setRegisterLoading, setShowBanner)}
+              onClick={() =>
+                register(id, props.url, setRegisterLoading, setShowBanner)
+              }
             >
               {LoadingComponent()}
               Register

@@ -31,8 +31,6 @@ function Login(props) {
     setPassword(event.target.value);
   };
 
-  
-
   const handleSubmit = (event) => {
     event.preventDefault();
     var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
@@ -45,8 +43,7 @@ function Login(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log(result.data.body);
-        var response = JSON.parse(result.data.body)
+        var response = result.data.body
 
         if(response["present"] === true){
           localStorage.setItem("uni", uni);
