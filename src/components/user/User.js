@@ -16,7 +16,8 @@ function fetchUserDetails(setData, url, setLoading) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      var res = JSON.parse(result.data.body)
+      var res = result.data.body
+      console.log(result.data)
       setLoading(false);
       setData({
         'name' : res.name, 

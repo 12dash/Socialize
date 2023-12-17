@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Cards, PollingCards } from "../displayComponents/Cards";
+import { Cards } from "../displayComponents/Cards";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
 

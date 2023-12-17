@@ -39,7 +39,10 @@ function getData(type, id, setDetails, url, setLoading) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      setDetails(result.data.body);
+      if (result.data.body) {
+        setDetails(result.data.body);
+      }
+
       setLoading(false);
     })
     .catch(function (error) {
@@ -67,7 +70,8 @@ function Specifc(props) {
   const type = queryParams.get("type");
 
   const [details, setDetails] = useState({
-    attendees : []
+    attendees: [],
+    title: null,
   });
   const [showBanner, setShowBanner] = useState(false);
 
@@ -127,7 +131,7 @@ function Specifc(props) {
                 {details["attendees"].length}
               </div>
             </div>
-            
+
             <br />
           </div>
           <div className="col-2 offset-4 ">
