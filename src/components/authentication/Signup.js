@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
+import backgroundImage from '../../campus.jpeg';
 import "./authentication.css";
 import logo from "../../logo.svg";
 
@@ -13,6 +14,18 @@ function Signup(props) {
     password: "",
     confirmPassword: "",
   });
+  const styles = {
+    backgroundImage: `url(${backgroundImage})`,
+    height: '100vh',
+    padding: '0',
+    margin: '0',
+    imageRendering: 'crisp-edges',
+    imageRendering: 'auto',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',
+    opacity: '1',
+  };
+
   const [showBanner, setShowBanner] = useState(false);
   const handleChange = (event) => {
     var { name, value } = event.target;
@@ -75,7 +88,7 @@ function Signup(props) {
       <div className="row">
         <div
           className="col-8 login-image-container"
-          style={{ padding: 0 }}
+          style={styles}
         ></div>
 
         <div className="col-4 d-flex align-items-center justify-content-center">

@@ -1,12 +1,25 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
+import backgroundImage from '../../campus.jpeg';
 import "./authentication.css";
 import logo from "../../logo.svg";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
 
 function Login(props) {
+  const styles = {
+    backgroundImage: `url(${backgroundImage})`,
+    height: '100vh',
+    padding: '0',
+    margin: '0',
+    imageRendering: 'crisp-edges',
+    imageRendering: 'auto',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',
+    opacity: '1',
+  };
+
   const [uni, setUni] = useState("");
   const [password, setPassword] = useState("");
 
@@ -52,8 +65,8 @@ function Login(props) {
     <>
       <div className="row">
         <div
-          className="col-8 login-image-container"
-          style={{ padding: 0 }}
+          className="col-8"
+          style={styles}
         ></div>
         <div className="col-4 d-flex align-items-center justify-content-center">
           <form onSubmit={handleSubmit}>
