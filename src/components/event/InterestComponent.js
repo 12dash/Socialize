@@ -66,7 +66,14 @@ function InterestComponent(props) {
           type={item.category}
         />
       ));
-    } else return <></>;
+    } else  {
+      if (loading === true){
+        return(<></>)
+      }
+      else{
+        return(<>No Results Found</>)
+      }
+    }
   };
   const [loading, setLoading] = useState(false);
 

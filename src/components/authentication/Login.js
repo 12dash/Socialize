@@ -31,6 +31,8 @@ function Login(props) {
     setPassword(event.target.value);
   };
 
+  
+
   const handleSubmit = (event) => {
     event.preventDefault();
     var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
@@ -38,6 +40,7 @@ function Login(props) {
     var pathParams = {};
     var method = "GET";
     var body = {};
+    setLoading(true);
     var additionalParams = { headers: { uni: uni, password : password }, queryParams: {} };
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
@@ -51,14 +54,30 @@ function Login(props) {
           localStorage.setItem("name", response.user.name);
           localStorage.setItem("interest", response.user.interest);
           window.location.href = "/";
+          setLoading(false);
         }
         else{
           alert(response['err'])
+          setLoading(false);
         }
       })
       .catch(function (error) {
         console.log(error);
+        setLoading(false);
       });
+  };
+
+  const [loading, setLoading] = useState(false);
+  const LoadingComponent = () => {
+    if (loading) {
+      return (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
   };
 
   return (
@@ -98,6 +117,7 @@ function Login(props) {
                 required
               />
             </div>
+            {LoadingComponent()}
             <br />
             <div className="row" style={{ textAlign: "center" }}>
               <button type="submit" className="btn btn-primary">

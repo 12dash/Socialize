@@ -48,6 +48,7 @@ function Create(props) {
     event.preventDefault();
     console.log("Submit", formData);
     var uni = localStorage.getItem("uni");
+    setLoading(true);
 
     var apigClient = apigClientFactory.newClient({
       invokeUrl: props.url,
@@ -82,9 +83,11 @@ function Create(props) {
         .then(function (result) {
           console.log("submitted:", result);
           setShowBanner(true);
+          setLoading(false);
         })
         .catch(function (error) {
           console.log("Error:", error);
+          setLoading(false);
         });
     } else {
       var pathTemplate = "/create/activity";
@@ -107,9 +110,11 @@ function Create(props) {
         .then(function (result) {
           console.log("submitted:", result);
           setShowBanner(true);
+          setLoading(false);
         })
         .catch(function (error) {
           console.log("Error:", error);
+          setLoading(false);
         });
     }
   };
@@ -162,6 +167,19 @@ function Create(props) {
         </div>
       );
     else return <></>;
+  };
+
+  const [loading, setLoading] = useState(false);
+  const LoadingComponent = () => {
+    if (loading) {
+      return (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
   };
 
   return (
@@ -353,7 +371,7 @@ function Create(props) {
           <div className="col-2" />
           {CategoryComponent()}
         </div>
-
+        {LoadingComponent()}
         <button type="submit" className="btn btn-primary">
           Create
         </button>

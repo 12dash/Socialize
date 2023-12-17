@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
-function register(activity_id, url) {
+function register(activity_id, url,setRegisterLoading, setShowBanner) {
   var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
   var pathTemplate = "/activity/register";
   var pathParams = {};
   var method = "POST";
+  setRegisterLoading(true);
+  setShowBanner(false);
   var body = {
     activity_id: activity_id,
   };
@@ -15,10 +17,12 @@ function register(activity_id, url) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      console.log("submitted:", result);
+      setRegisterLoading(false);
+      setShowBanner(true);
     })
     .catch(function (error) {
       console.log("Error:", error);
+      setRegisterLoading(false);
     });
 }
 
@@ -64,12 +68,37 @@ function Specifc(props) {
   const type = queryParams.get("type");
 
   const [details, setDetails] = useState({});
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     getData(type, id, setDetails, props.url, setLoading);
   }, [props.url, type, id]);
 
   const [loading, setLoading] = useState(false);
+  const [resgisterLoading, setRegisterLoading] = useState(false);
+
+  const LoadingComponent = () => {
+    if (resgisterLoading) {
+      return (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
+  const AlertComponenet = () => {
+    if (showBanner)
+      return (
+        <div className="alert alert-success" role="alert">
+          You have been registered
+        </div>
+      );
+    else return <></>;
+  };
+
   if (loading) {
     return (
       <div className="spinner-border" role="status">
@@ -96,13 +125,15 @@ function Specifc(props) {
           <div className="col-2 offset-4 ">
             <button
               className="btn btn-primary"
-              onClick={() => register(id, props.url)}
+              onClick={() => register(id, props.url, setRegisterLoading, setShowBanner)}
             >
+              {LoadingComponent()}
               Register
             </button>
           </div>
         </div>
         <br />
+        {AlertComponenet()}
         <h2>Details</h2>
         {details.description}
       </div>

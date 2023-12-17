@@ -65,7 +65,7 @@ function ProfileEdit(props) {
   const InterestComponent = () => {
     if (interestArray !== null) {
       return interestArray.map((item, index) => (
-        <div className="col-sm-2" key={item}>
+        <div className="col-sm-3" key={item}>
           <button
             className="btn btn-outline-secondary"
             onClick={() => handleInterestRemoval(index)}
@@ -91,6 +91,7 @@ function ProfileEdit(props) {
     var pathTemplate = "/profile/update";
     var pathParams = {};
     var method = "PUT";
+    setLoading(true);
     var body = {
       location: data.location,
       phoneno: data.phoneNum,
@@ -100,16 +101,33 @@ function ProfileEdit(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
+        console.log(result)
         localStorage.setItem("interest", interestArray);
+        setLoading(false);
       })
       .catch(function (error) {
         console.log("Error:", error);
+        setLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchUserDetails(setData, setInterestArray, props.url);
+    fetchUserDetails(setData, setInterestArray, props.url, setLoading);
   }, [props.url]);
+
+  const [loading, setLoading] = useState(false);
+
+  const LoadingComponent = () => {
+    if (loading) {
+      return (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
+  };
 
   return (
     <>
@@ -177,6 +195,7 @@ function ProfileEdit(props) {
                 id="location"
                 value={data.location}
                 onChange={handleLocationChange}
+                required
               />
             </div>
           </div>
@@ -192,6 +211,7 @@ function ProfileEdit(props) {
                 id="phoneNum"
                 value={data.phoneNum}
                 onChange={handlePhonenumChange}
+                required
               />
             </div>
           </div>
@@ -223,12 +243,14 @@ function ProfileEdit(props) {
           <br />
           <div className="row">
             <div className="col-2" />
-            {InterestComponent()}
+            <div className="col-10">
+              <div className="row">{InterestComponent()}</div>
+            </div>
           </div>
-
           <button type="submit" className="btn btn-primary">
             Edit
           </button>
+          {LoadingComponent()}
         </form>
       </div>
     </>

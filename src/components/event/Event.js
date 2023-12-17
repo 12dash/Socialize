@@ -27,7 +27,7 @@ function Event(props) {
       </h5>
       <InterestComponent url={props.url} tag={interest_} />
       <br />
-      <h3>Currently Polling</h3>
+      <h5>Currently Polling</h5>
       {<PollComponent url={props.url} category='Event'/>}
     </div>
   );

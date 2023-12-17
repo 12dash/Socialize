@@ -12,8 +12,6 @@ function StudyGroup(props) {
       <br />
       <h5>Suggested for you</h5>
       <PersonalizeStudyGroup url={props.url} />
-  
-      {/*<PollComponent url={props.url} tag={interest_} />*/}
     </div>
   );
 }

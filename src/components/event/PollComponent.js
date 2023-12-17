@@ -11,19 +11,25 @@ function PollComponent(props) {
     var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
     var pathTemplate = "/poll/category";
     var pathParams = {};
+    setLoading(true);
     var method = "GET";
     var body = {
       category: "Event",
       tag: props.tag,
     };
-    var additionalParams = { headers: { user_id: uni, category: props.category }, queryParams: {} };
+    var additionalParams = {
+      headers: { user_id: uni, category: props.category },
+      queryParams: {},
+    };
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
         console.log(result.data.body);
         setData(result.data.body);
+        setLoading(false);
       })
       .catch(function (error) {
+        setLoading(true);
         setData([
           {
             id: "12rkjbnacijld",
@@ -36,13 +42,25 @@ function PollComponent(props) {
             category: "Event",
           },
         ]);
-       //console.log(error);
       });
   }, [props.url, props.tag]);
 
   function ScrollableCardRow({ children }) {
     return <div className="d-flex flex-nowrap overflow-auto">{children}</div>;
   }
+
+  const [loading, setLoading] = useState(false);
+  const LoadingComponent = () => {
+    if (loading) {
+      return (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
+  };
 
   const Component = () => {
     if (data !== null) {
@@ -55,11 +73,18 @@ function PollComponent(props) {
           type={item.category}
         />
       ));
-    } else return <></>;
+    } else {
+      if (loading === true) {
+        return <></>;
+      } else {
+        return <>No Results Found</>;
+      }
+    }
   };
 
   return (
     <>
+      {LoadingComponent()}
       <ScrollableCardRow>{Component()}</ScrollableCardRow>
     </>
   );

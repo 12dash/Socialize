@@ -11,6 +11,7 @@ function PollComponent(props) {
     var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
     var pathTemplate = "/poll/category";
     var pathParams = {};
+    setLoading(true);
     var method = "GET";
     var body = {
       category: "Event",
@@ -20,10 +21,11 @@ function PollComponent(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log(result.data.body);
+        setLoading(false);
         setData(result.data.body);
       })
       .catch(function (error) {
+        setLoading(false);
         setData([
           {
             id: "12rkjbnacijld",
@@ -40,6 +42,19 @@ function PollComponent(props) {
       });
   }, [props.url, props.tag]);
 
+  const [loading, setLoading] = useState(false);
+  const LoadingComponent = () => {
+    if (loading) {
+      return (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   function ScrollableCardRow({ children }) {
     return <div className="d-flex flex-nowrap overflow-auto">{children}</div>;
   }
@@ -55,11 +70,18 @@ function PollComponent(props) {
           type={item.category}
         />
       ));
-    } else return <></>;
+    } else {
+      if (loading === true) {
+        return <></>;
+      } else {
+        return <>No Results Found</>;
+      }
+    }
   };
 
   return (
     <>
+    {LoadingComponent()}
       <ScrollableCardRow>{Component()}</ScrollableCardRow>
     </>
   );

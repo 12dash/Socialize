@@ -19,7 +19,6 @@ function SearchComponent(props) {
     var pathParams = {};
     var method = "GET";
     var body = {};
-
     setLoading(true);
     var additionalParams = {
       headers: { user_id: uni },

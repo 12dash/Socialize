@@ -12,9 +12,7 @@ function Home(props) {
   const [polls, setPolls] = useState(null);
   const [activities, setActivities] = useState(null);
   const [loading, setLoading] = useState(false);
-  function isJSON(obj) {
-    return typeof obj === 'object' && obj !== null;
-  }
+
   useEffect(() => {
     var uni = localStorage.getItem("uni");
     setLoading(true);
@@ -130,16 +128,18 @@ function Home(props) {
       <br />
       <h1>Homepage</h1>
       <hr />
-      <h2>Upcoming</h2>
+      <h5>Upcoming</h5>
+      You have registered for these 
       <br />
       {LoadingComponent()}
       <ScrollableCardRow>{UpcomingComponent()}</ScrollableCardRow>
       <br />
-      <h2>Activities Created by you</h2>
+      <h5>Created by you</h5>
       {LoadingComponent()}
       <ScrollableCardRow>{AcitivitiesComponent()}</ScrollableCardRow>
       <br />
-      <h2>Your Polls</h2>
+      <h5>Your Polls</h5>
+      Polls created by you
       {LoadingComponent()}
       <ScrollableCardRow>{PollsComponent()}</ScrollableCardRow>
     </>
