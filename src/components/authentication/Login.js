@@ -35,7 +35,8 @@ function Login(props) {
         if(response["present"] === true){
           localStorage.setItem("uni", uni);
           localStorage.setItem("isAuthenticated", true);
-          localStorage.setItem("name", "John Doe");
+          localStorage.setItem("name", response.user.name);
+          localStorage.setItem("interest", response.user.interest);
           window.location.href = "/";
         }
         else{

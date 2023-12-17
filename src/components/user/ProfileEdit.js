@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { InterestsList } from "../Utils";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
 
@@ -37,7 +38,7 @@ function ProfileEdit(props) {
     phoneNum: "",
   });
 
-  const [interest, setInterest] = useState("");
+  const [interest, setInterest] = useState(InterestsList[0]);
   const [interestArray, setInterestArray] = useState([]);
 
   const handleInterestRemoval = (index) => {
@@ -45,8 +46,8 @@ function ProfileEdit(props) {
     updatedDaterray.splice(index, 1);
     setInterestArray(updatedDaterray);
   };
-  const handleInterestChange = (event) => {
-    setInterest(event.target.value);
+  const handleInterestChange = (value) => {
+    setInterest(value);
   };
 
   const handleInterestArray = (event) => {
@@ -54,8 +55,10 @@ function ProfileEdit(props) {
 
     if (interest.trim() !== "") {
       var val = interest.trim().replace(" ", "");
-      setInterestArray([...interestArray, val]);
-      setInterest("");
+      if (interestArray.includes(val) === false) {
+        setInterestArray([...interestArray, val]);
+        setInterest(InterestsList[0]);
+      }
     }
   };
 
@@ -89,14 +92,15 @@ function ProfileEdit(props) {
     var pathParams = {};
     var method = "PUT";
     var body = {
-        location: data.location,
-        phoneno: data.phoneNum,
-        interest: interestArray
-    }
+      location: data.location,
+      phoneno: data.phoneNum,
+      interest: interestArray,
+    };
     var additionalParams = { headers: { uni: uni }, queryParams: {} };
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
+        localStorage.setItem("interest", interestArray);
       })
       .catch(function (error) {
         console.log("Error:", error);
@@ -197,13 +201,18 @@ function ProfileEdit(props) {
               Interests:
             </label>
             <div className="col-sm-8">
-              <input
-                type="text"
-                className="form-control"
+              <select
+                className="form-select"
                 id="interests"
                 value={interest}
-                onChange={handleInterestChange}
-              />
+                onChange={(e) => handleInterestChange(e.target.value)}
+              >
+                {InterestsList.map((h) => (
+                  <option key={h} value={h}>
+                    {h}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="col-sm-2">
               <button className="btn btn-primary" onClick={handleInterestArray}>

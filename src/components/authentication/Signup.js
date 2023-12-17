@@ -13,7 +13,7 @@ function Signup(props) {
     password: "",
     confirmPassword: "",
   });
-
+  const [showBanner, setShowBanner] = useState(false);
   const handleChange = (event) => {
     var { name, value } = event.target;
     name = event.target.id;
@@ -22,39 +22,54 @@ function Signup(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const isColumbiaEmail = data.email.endsWith('@columbia.edu');
-    if (isColumbiaEmail === false){
-      alert('Please provide your columbia email id that ends with @columbia.edu')
-    }
-    else if (data.password !== data.confirmPassword) {
+    const isColumbiaEmail = data.email.endsWith("@columbia.edu");
+    if (isColumbiaEmail === false) {
+      alert(
+        "Please provide your columbia email id that ends with @columbia.edu"
+      );
+    } else if (data.password !== data.confirmPassword) {
       alert("Password and cofirm password does not match");
-    } 
-    else {
+    } else {
       console.log(data);
       var apigClient = apigClientFactory.newClient({ invokeUrl: props.url });
       var pathTemplate = "/auth/signup";
       var pathParams = {};
       var method = "POST";
       var body = {};
-      var additionalParams = { headers: { uni: data.uni, emailid : data.email, password : data.password }, queryParams: {} };
+      var additionalParams = {
+        headers: {
+          uni: data.uni,
+          emailid: data.email,
+          password: data.password,
+        },
+        queryParams: {},
+      };
       apigClient
         .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
         .then(function (result) {
           console.log(result.data.body);
-          var response = JSON.parse(result.data.body)
+          var response = JSON.parse(result.data.body);
 
           localStorage.setItem("uni", data.uni);
           localStorage.setItem("email", data.email);
-          console.log(response)
-          window.location.href = "/createprofile";
+          console.log(response);
+          setShowBanner(true);
         })
         .catch(function (error) {
           console.log(error);
         });
-
     }
   };
-
+  const AlertComponenet = () => {
+    if (showBanner)
+      return (
+        <div className="alert alert-success" role="alert">
+          {" "}
+          Please check your email for verification{" "}
+        </div>
+      );
+    else return <></>;
+  };
   return (
     <>
       <div className="row">
@@ -62,10 +77,14 @@ function Signup(props) {
           className="col-8 login-image-container"
           style={{ padding: 0 }}
         ></div>
+
         <div className="col-4 d-flex align-items-center justify-content-center">
           <form onSubmit={handleSubmit}>
             <div className="row">
-              <img className="logo" src={logo} alt="columbia"/>
+              <img className="logo" src={logo} alt="columbia" />
+            </div>
+            <div className="row">
+              <div className="col-8 offset-2">{AlertComponenet()}</div>
             </div>
             <div className="row">
               <div className="form-group">
@@ -81,6 +100,7 @@ function Signup(props) {
               </div>
             </div>
             <br />
+
             <div className="row">
               <div className="form-group">
                 <label htmlFor="email">Email:</label>

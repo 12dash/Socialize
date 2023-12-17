@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { InterestsList } from "../Utils";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
 
@@ -10,16 +11,15 @@ function Create(props) {
     poll: false,
   });
 
-  const [timeArray, setTimeArray] = useState([]);
   const [hour, setHour] = useState("01");
   const [minute, setMinute] = useState("00");
   const [period, setPeriod] = useState("PM");
 
   const [location, setLocation] = useState("");
-  const [locationArray, setLocationArray] = useState([]);
-
   const [date, setDate] = useState("");
-  const [dateArray, setDateArray] = useState([]);
+
+  const [category, setCategory] = useState(InterestsList[0]);
+  const [categoryArray, setCategoryArray] = useState([]);
 
   const hours = Array.from({ length: 12 }, (_, index) =>
     String(index + 1).padStart(2, "0")
@@ -29,32 +29,11 @@ function Create(props) {
   );
   const periods = ["AM", "PM"];
 
-  const CreateArrayComponents = (array, setArray) => {
-    if (array !== null) {
-      return array.map((item, index) => (
-        <div className="col-2" key={item}>
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => handleRemove(index, array, setArray)}
-          >
-            {item}{" "}
-          </button>
-        </div>
-      ));
-    } else return <></>;
-  };
-
   const handleChange = (event) => {
     var { name, value, type, checked } = event.target;
     name = event.target.id;
     value = type === "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: value });
-  };
-
-  const handleRemove = (index, setArray, updateArray) => {
-    const updatedArray = [...setArray];
-    updatedArray.splice(index, 1);
-    updateArray(updatedArray);
   };
 
   const handleDateChange = (event) => {
@@ -65,121 +44,131 @@ function Create(props) {
     setLocation(event.target.value);
   };
 
-  const handleTimeArray = (event) => {
-    event.preventDefault();
-    var val = hour + ":" + minute + " " + period;
-    setTimeArray([...timeArray, val]);
-    setHour("01");
-    setMinute("00");
-    setPeriod("PM");
-  };
-
-  const handleDateArray = (event) => {
-    event.preventDefault();
-    if (date.trim() !== "") {
-      var val = date.trim().replace(" ", "");
-      if (!dateArray.includes(val)) {
-        setDateArray([...dateArray, val]);
-      }
-      setDate("");
-    }
-  };
-
-  const handleLocationArray = (event) => {
-    event.preventDefault();
-
-    if (location.trim() !== "") {
-      var val = location.trim();
-      setLocationArray([...locationArray, val]);
-      setLocation("");
-    }
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    var category_validation = formData.category !== "";
-    var timeArray_validation = timeArray.length > 0;
-    var locationArray_validation = locationArray.length > 0;
-    var dateArray_validation = dateArray.length > 0;
+    console.log("Submit", formData);
+    var uni = localStorage.getItem("uni");
 
-    if (
-      category_validation &&
-      timeArray_validation &&
-      locationArray_validation &&
-      dateArray_validation
-    ) {
-      if (formData.poll === false) {
-        if (timeArray.length > 1) {
-          alert(
-            "It seems you are trying to add more than 1 time but its not a poll. Either mark it as poll or choose one time"
-          );
-        }
-        if (locationArray.length > 1) {
-          alert(
-            "It seems you are trying to add more than 1 location but its not a poll. Either mark it as poll or choose one location"
-          );
-        }
-        if (dateArray.length > 1) {
-          alert(
-            "It seems you are trying to add more than 1 date but its not a poll. Either mark it as poll or choose one date"
-          );
-        } else {
-          console.log("Submit", formData);
-          var uni = localStorage.getItem("uni");
-          var apigClient = apigClientFactory.newClient({
-            invokeUrl: props.url,
-          });
-          var pathTemplate = "/create/activity";
-          var pathParams = {};
-          var method = "POST";
-          var [hour, minutePeriod] = timeArray[0].split(":");
-          var [minute, period] = minutePeriod.split(" ");
+    var apigClient = apigClientFactory.newClient({
+      invokeUrl: props.url,
+    });
 
-          if (period === "PM") {
-            hour = +hour + 12;
-          }
-          var time = String(hour) + ":" + minute + ":00";
+    var pathParams = {};
+    var method = "POST";
+    var hour_new = parseInt(hour);
 
-          var body = {
-            title: formData.name,
-            description: formData.description,
-            date: dateArray[0],
-            time: time,
-            location: locationArray[0],
-            category: formData.category,
-          };
-          var additionalParams = {
-            headers: { user_id: uni, "Content-Type": "application/json" },
-            queryParams: {},
-          };
-          apigClient
-            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-            .then(function (result) {
-              console.log("submitted:", result);
-            })
-            .catch(function (error) {
-              console.log("Error:", error);
-            });
-        }
-      }
+    if (period === "PM") {
+      hour_new = hour_new + 12;
+    }
+    var time = String(hour_new) + ":" + minute + ":00";
+
+    if (formData.poll) {
+      var pathTemplate = "/create/poll";
+      var body = {
+        title: formData.name,
+        description: formData.description,
+        date: date,
+        time: time,
+        location: location,
+        category: formData.category,
+        category_tag: categoryArray,
+      };
+      var additionalParams = {
+        headers: { user_id: uni, "Content-Type": "application/json" },
+        queryParams: {},
+      };
+      apigClient
+        .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+        .then(function (result) {
+          console.log("submitted:", result);
+          setShowBanner(true);
+        })
+        .catch(function (error) {
+          console.log("Error:", error);
+        });
     } else {
-      if (category_validation === false) alert("Please select a category");
-      else if (timeArray_validation === false)
-        alert("Please add at least 1 time");
-      else if (locationArray_validation === false)
-        alert("Please add at least 1 location");
-      else if (dateArray_validation === false)
-        alert("Please add at least 1 date");
-      console.log("Error with form");
+      var pathTemplate = "/create/activity";
+
+      var body = {
+        title: formData.name,
+        description: formData.description,
+        date: date,
+        time: time,
+        location: location,
+        category: formData.category,
+        category_tag: categoryArray,
+      };
+      var additionalParams = {
+        headers: { user_id: uni, "Content-Type": "application/json" },
+        queryParams: {},
+      };
+      apigClient
+        .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+        .then(function (result) {
+          console.log("submitted:", result);
+          setShowBanner(true);
+        })
+        .catch(function (error) {
+          console.log("Error:", error);
+        });
     }
   };
 
   const formattedDate = new Date().toISOString().split("T")[0];
 
+  const handleCategoryChange = (value) => {
+    setCategory(value);
+  };
+
+  const handleCategoryArrayChange = (event) => {
+    event.preventDefault();
+
+    if (category.trim() !== "") {
+      var val = category.trim().replace(" ", "");
+      if (categoryArray.includes(val) === false) {
+        setCategoryArray([...categoryArray, val]);
+        setCategory(InterestsList[0]);
+      }
+    }
+  };
+
+  const handleCategoryRemoval = (index) => {
+    const updatedDaterray = [...categoryArray];
+    updatedDaterray.splice(index, 1);
+    setCategoryArray(updatedDaterray);
+  };
+
+  const CategoryComponent = () => {
+    if (categoryArray !== null) {
+      return categoryArray.map((item, index) => (
+        <div className="col-sm-2" key={item}>
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => handleCategoryRemoval(index)}
+          >
+            {item}{" "}
+          </button>
+        </div>
+      ));
+    } else return <></>;
+  };
+  const [showBanner, setShowBanner] = useState(false);
+
+  const AlertComponenet = () => {
+    if (showBanner)
+      return (
+        <div className="alert alert-success" role="alert">
+          Created !!
+        </div>
+      );
+    else return <></>;
+  };
+
   return (
     <div>
       <h1>Create</h1>
       <br />
+      {AlertComponenet()}
       <form onSubmit={handleSubmit}>
         <div className="form-group row">
           <label htmlFor="category" className="col-2 col-form-label">
@@ -225,15 +214,15 @@ function Create(props) {
           </label>
           <br />
           <div className="col-10">
-            <input
-              type="text"
+            <textarea
               className="form-control"
               id="description"
+              rows="3"
               value={formData.description}
               onChange={handleChange}
               placeholder="Enter description"
               required
-            />
+            ></textarea>
           </div>
         </div>
         <br />
@@ -284,7 +273,7 @@ function Create(props) {
               ))}
             </select>
           </div>
-          <div className="col-1">
+          <div className="col-2">
             <select
               className="form-select"
               value={period}
@@ -297,20 +286,8 @@ function Create(props) {
               ))}
             </select>
           </div>
-
-          <div className="col-2">
-            <button className="btn btn-secondary" onClick={handleTimeArray}>
-              Add
-            </button>
-          </div>
-        </div>
-
-        <br />
-        <div className="row">
-          {CreateArrayComponents(timeArray, setTimeArray)}
         </div>
         <br />
-
         <div className="form-group row">
           <label htmlFor="location " className="col-2 col-form-label">
             Location:
@@ -325,15 +302,6 @@ function Create(props) {
               placeholder="e.g., Uris Hall"
             />
           </div>
-          <div className="col-2">
-            <button className="btn btn-secondary" onClick={handleLocationArray}>
-              Add
-            </button>
-          </div>
-        </div>
-        <br />
-        <div className="row">
-          {CreateArrayComponents(locationArray, setLocationArray)}
         </div>
         <br />
 
@@ -351,22 +319,46 @@ function Create(props) {
               min={formattedDate}
             />
           </div>
-          <div className="col-2">
-            <button className="btn btn-secondary" onClick={handleDateArray}>
+        </div>
+        <br />
+
+        <div className="form-group row">
+          <label htmlFor="category" className="col-2 col-form-label">
+            Enter Tags:
+          </label>
+          <div className="col-6">
+            <select
+              className="form-select"
+              value={category}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+            >
+              {InterestsList.map((h) => (
+                <option key={h} value={h}>
+                  {h}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-sm-2">
+            <button
+              className="btn btn-secondary"
+              onClick={handleCategoryArrayChange}
+            >
               Add
             </button>
           </div>
         </div>
         <br />
         <div className="row">
-          {CreateArrayComponents(dateArray, setDateArray)}
+          <div className="col-2" />
+          {CategoryComponent()}
         </div>
-        <br />
 
         <button type="submit" className="btn btn-primary">
           Create
         </button>
       </form>
+      <br />
     </div>
   );
 }

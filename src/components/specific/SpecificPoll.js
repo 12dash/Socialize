@@ -5,7 +5,7 @@ var apigClientFactory = require("aws-api-gateway-client").default;
 function register(activity_id, url) {
   var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
-  var pathTemplate = "/activity/register";
+  var pathTemplate = "/poll/participate/"+activity_id;
   var pathParams = {};
   var method = "POST";
   var body = {
@@ -26,7 +26,7 @@ function getData(type, id, setDetails, url, setLoading) {
   var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
   type = type.toLowerCase();
-  var pathTemplate = "/activity/" + id;
+  var pathTemplate = "/poll/viewOne/" + id;
   var pathParams = {};
   var method = "GET";
   var body = {};
@@ -57,7 +57,7 @@ function getData(type, id, setDetails, url, setLoading) {
   ]);
 }
 
-function Specifc(props) {
+function SpecifcPoll(props) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
@@ -84,11 +84,8 @@ function Specifc(props) {
           <div className="col-4 offset-1 text-center">
             <h2>{details.title}</h2>
             <div className="row ">
-              <div className="col-6">
-                <i className="fa-regular fa-clock" /> {details.datetime}
-              </div>
-              <div className="col-6">
-                <i className="fa-solid fa-location-dot" /> {details.location}
+              <div className="col-12">
+                <i className="fa-solid fa-users" /> {details['participants_count']}
               </div>
             </div>
             <br />
@@ -96,9 +93,9 @@ function Specifc(props) {
           <div className="col-2 offset-4 ">
             <button
               className="btn btn-primary"
-              onClick={() => register(id, props.url)}
+              onClick={() => register(details['poll_id'], props.url)}
             >
-              Register
+              Show Interest
             </button>
           </div>
         </div>
@@ -110,4 +107,4 @@ function Specifc(props) {
   }
 }
 
-export default Specifc;
+export default SpecifcPoll;
