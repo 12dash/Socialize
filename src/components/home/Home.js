@@ -107,6 +107,7 @@ function Home(props) {
   };
 
   const PollsComponent = () => {
+    console.log(polls)
     if (polls !== null) {
       if (polls.length > 0) {
         return polls.map((item) => (
@@ -114,7 +115,7 @@ function Home(props) {
             key={item.poll_id}
             pollingId={item.poll_id}
             title={item.title}
-            numPeople={item.paticipation_count}
+            numPeople={item.participants_count}
             type={item.category}
           />
         ));
