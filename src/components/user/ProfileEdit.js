@@ -96,7 +96,7 @@ function ProfileEdit(props) {
       phoneno: data.phoneNum,
       interest: interestArray,
     };
-    var additionalParams = { headers: { uni: uni }, queryParams: {} };
+    var additionalParams = { headers: { user_id: uni }, queryParams: {} };
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
