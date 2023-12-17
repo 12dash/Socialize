@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 var apigClientFactory = require("aws-api-gateway-client").default;
-function register(activity_id, url) {
+function register(activity_id, url, setAlert) {
   var uni = localStorage.getItem("uni");
   var apigClient = apigClientFactory.newClient({ invokeUrl: url });
   var pathTemplate = "/poll/participate/"+activity_id;
@@ -15,6 +15,14 @@ function register(activity_id, url) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
+      console.log(result.data.body)
+      var res = result.data.body
+      if (res['already_registered'] === true){
+        setAlert("User already marked interest")
+      }
+      else{
+        setAlert("We have recorded your response")
+      }
     })
     .catch(function (error) {
       console.log("Error:", error);
@@ -70,6 +78,17 @@ function SpecifcPoll(props) {
     getData(type, id, setDetails, props.url, setLoading);
   }, [props.url, type, id]);
 
+  const [alert, setAlert] = useState(null)
+  const AlertComponenet = () => {
+    if (alert)
+      return (
+        <div className="alert alert-success" role="alert">
+          {alert}
+        </div>
+      );
+    else return <></>;
+  };
+
   const [loading, setLoading] = useState(false);
   if (loading) {
     return (
@@ -94,13 +113,14 @@ function SpecifcPoll(props) {
           <div className="col-2 offset-4 ">
             <button
               className="btn btn-primary"
-              onClick={() => register(details['poll_id'], props.url)}
+              onClick={() => register(details['poll_id'], props.url, setAlert)}
             >
               Show Interest
             </button>
           </div>
         </div>
         <br />
+        {AlertComponenet()}
         <h2>Details</h2>
         {details.description}
       </div>
