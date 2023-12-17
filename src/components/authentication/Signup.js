@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import backgroundImage from '../../campus.jpeg';
+import backgroundImage from '../../campus.jpg';
 import "./authentication.css";
 import logo from "../../logo.svg";
 
