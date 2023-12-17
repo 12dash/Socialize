@@ -128,7 +128,7 @@ function Specifc(props) {
             <div className="row">
               <div className="col-12">
                 <i className="fa-solid fa-users" />{" "}
-                {details["attendees"].length}
+                {/*details.attendees.length*/}
               </div>
             </div>
 

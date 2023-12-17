@@ -14,7 +14,7 @@ function fetchUserDetails(setData, setInterestArray, url) {
   apigClient
     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function (result) {
-      var res = JSON.parse(result.data.body);
+      var res = result.data.body;
       setData({
         name: res.name,
         location: res.location,
@@ -101,7 +101,6 @@ function ProfileEdit(props) {
     apigClient
       .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(function (result) {
-        console.log(result)
         localStorage.setItem("interest", interestArray);
         setLoading(false);
       })
