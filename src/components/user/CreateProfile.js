@@ -102,6 +102,7 @@ function CreateProfile(props) {
       .then(function (result) {
         setShowBanner(true)
         setBannerVal('Profile has been created')
+        window.location.href='/'
       })
       .catch(function (error) {
         console.log("Error:", error);
