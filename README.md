@@ -1,18 +1,9 @@
 # Socialize
+Code repository that is maintained for frontend deployment. This repository acts as a source to the AWS amplify resource that deploys the frontend website.
 
-## Backend
-All the backend code is present in this folder
-* API_Gateway : 
-* Lambda Functions :
-    * For each of the endpoint, the corresponding lambda function name is is '/' replaced by '_' followed by method 
-    * GET method of endpoint homepage/ -> homepage_get
+Refer to the main repo consisting of the entire prohject details : https://github.com/Smrithi23/Socialize-AWS
 
-## Frontend
-
-If deployment for the api gateway changes, then just need to change the URK of uploaded stage in src/App.js
-
-To start the frontend : 
+## For Local Development 
 ```
 npm start
-``` 
-
+```
