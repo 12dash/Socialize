@@ -198,7 +198,7 @@ function CreateProfile(props) {
 
         <div className="form-group row">
           <label htmlFor="interest" className="col-2 col-form-label">
-            Enter Time:
+            Interests:
           </label>
           <div className="col-6">
             <select
